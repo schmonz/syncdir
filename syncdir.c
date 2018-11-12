@@ -25,7 +25,7 @@
 #undef open
 #include <unistd.h>
 #include <string.h>
-#include <syscall.h>
+#include <sys/syscall.h>
 #include <stdio.h>
 #include <errno.h>
 

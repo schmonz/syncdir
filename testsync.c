@@ -2,7 +2,7 @@
 #include <fcntl.h>
 #include <string.h>
 
-inline void msg(const char* m)
+void msg(const char* m)
 {
   write(1, m, strlen(m));
 }
