@@ -5,12 +5,12 @@
 static int checked_noisy = 0;
 static int be_noisy = 0;
 
-extern int (*real_open)();
-extern int (*real_close)();
-extern int (*real_link)();
-extern int (*real_unlink)();
-extern int (*real_rename)();
-extern int (*real_fsync)();
+int (*real_open)();
+int (*real_close)();
+int (*real_link)();
+int (*real_unlink)();
+int (*real_rename)();
+int (*real_fsync)();
 
 static void log_failure(const char *which)
 {
