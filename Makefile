@@ -32,6 +32,8 @@ wrappers.c: trysyscall.c
 wrappers.h: wrappers.c
 	if [ -f trysyscall.o ]; then cp syscall.h $@; else cp dlsym.h $@; fi
 
+syncdir.lo: wrappers.h
+
 install:	all
 	$(LIBTOOL) --mode=install $(BSD_INSTALL_LIB) libsyncdir.la $(DESTDIR)$(libdir)
 
