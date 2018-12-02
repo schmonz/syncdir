@@ -18,7 +18,7 @@ all:	libsyncdir.la
 	$(LIBTOOL) --mode=compile $(CC) $(CFLAGS) -c -o $@ $<
 
 testsync: testsync.lo libsyncdir.la
-	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ $< libsyncdir.la
+	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ testsync.lo libsyncdir.la
 
 libsyncdir.la: wrappers.h libtool-version-info $(LOBJS)
 	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ $(LOBJS) -version-info `cat libtool-version-info` -rpath $(libdir)
@@ -27,7 +27,7 @@ libtool-version-info:
 	echo $(VERSION) | awk -F. '{ printf "%d:%d:0", $$1, $$2 }' > $@
 
 wrappers.c: trysyscall.c
-	if $(CC) $(CFLAGS) -Wall -Werror -c $< >/dev/null 2>&1; then cp syscall.c $@; else cp dlsym.c $@; fi
+	if $(CC) $(CFLAGS) -Wall -Werror -c trysyscall.c >/dev/null 2>&1; then cp syscall.c $@; else cp dlsym.c $@; fi
 
 wrappers.h: wrappers.c
 	if [ -f trysyscall.o ]; then cp syscall.h $@; else cp dlsym.h $@; fi
