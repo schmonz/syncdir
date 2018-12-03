@@ -29,7 +29,7 @@ libtool-version-info:
 wrappers.c: trysyscall.c
 	if $(CC) $(CFLAGS) -Wall -Werror -c trysyscall.c >/dev/null 2>&1; then cp syscall.c $@; else cp dlsym.c $@; fi
 
-wrappers.h: wrappers.c dlfcn.h
+wrappers.h: wrappers.c dlfcn.h fsync.h
 	if [ -f trysyscall.o ]; then cp syscall.h $@; else cp dlsym.h $@; fi
 
 dlfcn.h: trydlfcn.c
@@ -38,6 +38,13 @@ dlfcn.h: trydlfcn.c
 	&& $(CC) $(CFLAGS) -D_GNU_SOURCE=1 -Wall -Werror -c trydlfcn.c >/dev/null 2>&1; \
 	then echo "#define _GNU_SOURCE" >> $@; fi
 	echo "#include <dlfcn.h>" >> $@
+
+fsync.h: tryfsync.c
+	> $@
+	if $(CC) $(CFLAGS) -Wall -Werror -c tryfsync.c >/dev/null 2>&1; \
+	then echo "#define SYS_FSYNC(FD) syscall(SYS_fsync, FD)" >> $@; \
+	else echo "#define SYS_FSYNC(FD) fsync(FD)" >> $@; \
+	fi
 
 syncdir.lo: wrappers.h
 
@@ -54,5 +61,5 @@ distrib:
 
 clean:
 	$(RM) core *.o *.lo *.la *.so *.a testsync $(TARGET).tar.gz
-	$(RM) libtool-version-info wrappers.c wrappers.h dlfcn.h
+	$(RM) libtool-version-info wrappers.c wrappers.h dlfcn.h fsync.h
 	$(RM) -r .libs
