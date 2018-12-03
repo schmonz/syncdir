@@ -6,3 +6,5 @@
 #define SYS_UNLINK(PATH) syscall(SYS_unlink, PATH)
 #define SYS_RENAME(OLD,NEW) syscall(SYS_rename, OLD, NEW)
 #define SYS_FSYNC(FD) syscall(SYS_fsync, FD)
+
+#define load_real_syscalls(x) ;

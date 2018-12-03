@@ -20,7 +20,7 @@ all:	libsyncdir.la
 testsync: testsync.lo libsyncdir.la
 	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ testsync.lo libsyncdir.la
 
-libsyncdir.la: wrappers.h libtool-version-info $(LOBJS)
+libsyncdir.la: libtool-version-info $(LOBJS)
 	$(LIBTOOL) --mode=link $(CC) $(LDFLAGS) -o $@ $(LOBJS) -version-info `cat libtool-version-info` -rpath $(libdir)
 
 libtool-version-info:
@@ -29,8 +29,15 @@ libtool-version-info:
 wrappers.c: trysyscall.c
 	if $(CC) $(CFLAGS) -Wall -Werror -c trysyscall.c >/dev/null 2>&1; then cp syscall.c $@; else cp dlsym.c $@; fi
 
-wrappers.h: wrappers.c
+wrappers.h: wrappers.c dlfcn.h
 	if [ -f trysyscall.o ]; then cp syscall.h $@; else cp dlsym.h $@; fi
+
+dlfcn.h: trydlfcn.c
+	> $@
+	if ! $(CC) $(CFLAGS) -Wall -Werror -c trydlfcn.c >/dev/null 2>&1 \
+	&& $(CC) $(CFLAGS) -D_GNU_SOURCE=1 -Wall -Werror -c trydlfcn.c >/dev/null 2>&1; \
+	then echo "#define _GNU_SOURCE" >> $@; fi
+	echo "#include <dlfcn.h>" >> $@
 
 syncdir.lo: wrappers.h
 
@@ -47,5 +54,5 @@ distrib:
 
 clean:
 	$(RM) core *.o *.lo *.la *.so *.a testsync $(TARGET).tar.gz
-	$(RM) libtool-version-info wrappers.c wrappers.h
+	$(RM) libtool-version-info wrappers.c wrappers.h dlfcn.h
 	$(RM) -r .libs

@@ -1,4 +1,4 @@
-#include <dlfcn.h>
+#include "dlfcn.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,7 +17,7 @@ static void log_failure(const char *which)
   if (be_noisy) fprintf(stderr, "syncdir: can't load system %s()\n", which);
 }
 
-void load_real_syscalls()
+void load_dlsym_syscalls()
 {
   if (!checked_noisy && getenv("SYNCDIRDEBUG"))
     be_noisy = 1;

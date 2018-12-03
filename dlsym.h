@@ -11,3 +11,5 @@ extern int (*real_fsync)();
 #define SYS_UNLINK(PATH) real_unlink(PATH)
 #define SYS_RENAME(OLD,NEW) real_rename(OLD, NEW)
 #define SYS_FSYNC(FD) real_fsync(FD)
+
+#define load_real_syscalls(x) load_dlsym_syscalls(x)
