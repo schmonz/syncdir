@@ -30,8 +30,6 @@
 
 #include "wrappers.h"
 
-int load_real_syscalls(void);
-
 static int fdirsync(const char* filename, unsigned length)
 {
   char dirname[length+1];
