@@ -12,4 +12,5 @@ extern int (*real_fsync)();
 #define SYS_RENAME(OLD,NEW) real_rename(OLD, NEW)
 #define SYS_FSYNC(FD) real_fsync(FD)
 
+void load_dlsym_syscalls(void);
 #define load_real_syscalls(x) load_dlsym_syscalls(x)
